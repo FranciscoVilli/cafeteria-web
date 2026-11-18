@@ -1,0 +1,43 @@
+sequenceDiagram
+  autonumber
+  actor Cliente
+  participant UI as Página /carrito
+  participant SA as Server Action confirmarPedido
+  participant PS as PedidoServicio
+  participant CR as ClienteRepositorio
+  participant PR as ProductoRepositorio
+  participant D as dominio/pedido
+  participant PeR as PedidoRepositorio
+  participant DB as PostgreSQL
+  Cliente->>UI: Confirmar pedido
+  UI->>SA: confirmarPedido(carrito)
+  SA->>SA: exigirCliente() (sesión y rol)
+  SA->>PS: confirmarPedido(carrito, codigoCliente)
+  PS->>CR: buscarPorCodigo(codigoCliente)
+  CR-->>PS: cliente
+  alt carrito vacío
+    PS-->>SA: PedidoVacioError
+  end
+  PS->>PR: buscarVarios(códigos del carrito)
+  PR-->>PS: productos con precio vigente
+  alt algún producto no disponible
+    PS-->>SA: ProductoNoDisponibleError
+  end
+  loop hasta 5 intentos
+    PS->>PeR: existeCodigoRetiro(candidato)
+    PeR-->>PS: false
+    PS->>D: confirmar(cliente, detalles, código, fecha)
+    D-->>PS: pedido PENDIENTE con total
+    PS->>PeR: guardar(pedido)
+    PeR->>DB: rpc crear_pedido (una transacción)
+    alt código repetido (UNIQUE)
+      DB-->>PeR: error 23505
+      PeR-->>PS: CodigoRetiroDuplicadoError, se reintenta
+    else guardado
+      DB-->>PeR: id del pedido
+      PeR-->>PS: pedido con id
+    end
+  end
+  PS-->>SA: pedido
+  SA-->>UI: ok y código de retiro
+  UI-->>Cliente: Resumen y código de retiro

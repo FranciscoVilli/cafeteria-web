@@ -1,0 +1,11 @@
+stateDiagram-v2
+  direction TB
+  state "Pendiente" as PENDIENTE
+  state "En preparación" as EN_PREPARACION
+  state "Listo para retirar" as LISTO_PARA_RETIRAR
+  state "Entregado" as ENTREGADO
+  [*] --> PENDIENTE : confirmar pedido
+  PENDIENTE --> EN_PREPARACION : iniciar preparación
+  EN_PREPARACION --> LISTO_PARA_RETIRAR : terminar preparación
+  LISTO_PARA_RETIRAR --> ENTREGADO : entregar con código correcto
+  ENTREGADO --> [*]

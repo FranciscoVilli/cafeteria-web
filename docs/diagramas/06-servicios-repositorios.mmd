@@ -1,0 +1,70 @@
+classDiagram
+  direction LR
+  class MenuServicio {
+    +listarMenuCliente() Producto[]
+    +listarTodosLosProductos() Producto[]
+    +registrarProducto(datos) Producto
+    +actualizarProducto(codigo, nombre, categoria, precio, extras) Producto
+    +cambiarDisponibilidad(codigo, disponible) Producto
+  }
+  class ClienteServicio {
+    +registrarCliente(datos, contrasena) Cliente
+    +buscarPorCodigo(codigo) Cliente
+    +buscarPorUsuario(usuarioId) Cliente
+  }
+  class PedidoServicio {
+    +agregarAlCarrito(carrito, codigo, cantidad) Carrito
+    +cambiarCantidad(carrito, codigo, cantidad) Carrito
+    +quitarDelCarrito(carrito, codigo) Carrito
+    +calcularTotal(carrito) Centavos
+    +resumirCarrito(carrito) ResumenCarrito
+    +confirmarPedido(carrito, codigoCliente) Pedido
+    +consultarPorCodigoRetiro(codigo) Pedido
+    +consultarPedidosDeCliente(codigoCliente) Pedido[]
+    +listarPedidos(estado) Pedido[]
+    +contarPorEstado() Record
+    +avanzarEstado(id) Pedido
+    +entregarPedido(id, codigoPresentado) Pedido
+  }
+  class ProductoRepositorio {
+    <<interface>>
+    +guardar(producto)
+    +buscarPorCodigo(codigo) Producto
+    +buscarVarios(codigos) Producto[]
+    +listarDisponibles() Producto[]
+    +listarTodos() Producto[]
+  }
+  class ClienteRepositorio {
+    <<interface>>
+    +registrar(datos, usuarioId) Cliente
+    +buscarPorCodigo(codigo) Cliente
+    +buscarPorUsuario(usuarioId) Cliente
+    +existePorCedula(cedula) boolean
+    +existePorCorreo(correo) boolean
+  }
+  class PedidoRepositorio {
+    <<interface>>
+    +guardar(pedido) Pedido
+    +actualizarEstado(pedido, estadoAnterior) boolean
+    +buscarPorId(id) Pedido
+    +buscarPorCodigoRetiro(codigo) Pedido
+    +listarPorEstado(estado) Pedido[]
+    +listarPorCliente(codigoCliente) Pedido[]
+    +contarPorEstado() Record
+    +existeCodigoRetiro(codigo) boolean
+  }
+  class ProveedorCuentas {
+    <<interface>>
+    +crearCuentaCliente(correo, contrasena, nombre) string
+    +eliminarCuenta(usuarioId)
+  }
+  MenuServicio --> ProductoRepositorio
+  ClienteServicio --> ClienteRepositorio
+  ClienteServicio --> ProveedorCuentas
+  PedidoServicio --> PedidoRepositorio
+  PedidoServicio --> ProductoRepositorio
+  PedidoServicio --> ClienteRepositorio
+  ProductosSupabase ..|> ProductoRepositorio
+  ClientesSupabase ..|> ClienteRepositorio
+  PedidosSupabase ..|> PedidoRepositorio
+  CuentasSupabase ..|> ProveedorCuentas

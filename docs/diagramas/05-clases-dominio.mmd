@@ -1,0 +1,83 @@
+classDiagram
+  direction TB
+  class EstadoPedido {
+    <<enumeration>>
+    PENDIENTE
+    EN_PREPARACION
+    LISTO_PARA_RETIRAR
+    ENTREGADO
+  }
+  class Categoria {
+    <<enumeration>>
+    BEBIDA
+    ALIMENTO
+    POSTRE
+  }
+  class Producto {
+    <<interface>>
+    +codigo : string
+    +nombre : string
+    +categoria : Categoria
+    +precioCentavos : number
+    +disponible : boolean
+    +descripcion : string
+    +imagenUrl : string | null
+  }
+  class Cliente {
+    <<interface>>
+    +codigo : string
+    +nombre : string
+    +apellido : string
+    +cedula : string
+    +celular : string
+    +correoInstitucional : string
+  }
+  class Pedido {
+    <<interface>>
+    +id : number | null
+    +codigoRetiro : string
+    +cliente : Cliente
+    +estado : EstadoPedido
+    +fechaRegistro : Date
+    +detalles : DetallePedido[]
+    +importeTotalCentavos : number
+  }
+  class DetallePedido {
+    <<interface>>
+    +producto : ResumenProducto
+    +cantidad : number
+    +precioUnitarioCentavos : number
+  }
+  class LineaCarrito {
+    <<interface>>
+    +codigo : string
+    +cantidad : number
+  }
+  class pedido_ts {
+    <<módulo>>
+    +confirmar(cliente, detalles, codigoRetiro, fecha) Pedido
+    +calcularTotal(pedido) Centavos
+    +subtotal(detalle) Centavos
+    +avanzar(pedido) Pedido
+    +entregar(pedido, codigoPresentado) Pedido
+  }
+  class carrito_ts {
+    <<módulo>>
+    +agregar(carrito, codigo, cantidad) Carrito
+    +cambiarCantidad(carrito, codigo, cantidad) Carrito
+    +quitar(carrito, codigo) Carrito
+    +estaVacio(carrito) boolean
+  }
+  class estado_pedido_ts {
+    <<módulo>>
+    +siguienteEstado(estado) EstadoPedido
+    +mensajeTransicion(actual, destino) string
+  }
+  Cliente "1" -- "0..*" Pedido : realiza
+  Pedido "1" *-- "1..*" DetallePedido : contiene
+  DetallePedido "*" --> "1" Producto
+  Pedido --> EstadoPedido
+  Producto --> Categoria
+  carrito_ts ..> LineaCarrito : Carrito = LineaCarrito[]
+  pedido_ts ..> Pedido
+  pedido_ts ..> estado_pedido_ts

@@ -1,0 +1,15 @@
+flowchart TB
+  I((Inicio)) --> A["Ver la bandeja de pedidos (/personal)<br/>filtrada por estado y por orden de llegada"]
+  A --> B["Abrir el detalle del pedido"]
+  B --> C{"Estado actual"}
+  C -- Pendiente --> D["Iniciar preparación"]
+  C -- En preparación --> E["Marcar listo para retirar"]
+  D --> A
+  E --> A
+  C -- Listo para retirar --> F["El cliente muestra su código"]
+  F --> G["Digitar el código"]
+  G --> H{"¿Coincide?"}
+  H -- no --> M["Rechazar: código incorrecto"]
+  M --> G
+  H -- sí --> J["Registrar la entrega (Entregado)"]
+  J --> Z((Fin))

@@ -1,0 +1,49 @@
+erDiagram
+  AUTH_USERS ||--|| PERFIL : "tiene rol"
+  AUTH_USERS ||--o| CLIENTE : "es"
+  CLIENTE ||--o{ PEDIDO : realiza
+  PEDIDO ||--|{ DETALLE_PEDIDO : contiene
+  PRODUCTO ||--o{ DETALLE_PEDIDO : "se pide en"
+  AUTH_USERS {
+    uuid id PK
+    text email UK
+  }
+  PERFIL {
+    uuid usuario_id PK,FK
+    text rol "cliente o personal"
+    text nombre
+    boolean activo
+  }
+  CLIENTE {
+    text codigo PK "CLI-001"
+    uuid usuario_id UK,FK
+    text nombre
+    text apellido
+    text cedula UK
+    text celular
+    text correo_institucional UK
+  }
+  PRODUCTO {
+    text codigo PK
+    text nombre
+    text categoria "BEBIDA, ALIMENTO o POSTRE"
+    integer precio_centavos
+    boolean disponible
+    text descripcion
+    text imagen_url
+  }
+  PEDIDO {
+    bigint id PK
+    text codigo_retiro UK
+    text cliente_codigo FK
+    text estado
+    timestamptz fecha_registro
+    integer importe_total_centavos
+  }
+  DETALLE_PEDIDO {
+    bigint pedido_id PK,FK
+    text producto_codigo PK,FK
+    smallint orden
+    integer cantidad "1 a 50"
+    integer precio_unitario_centavos
+  }

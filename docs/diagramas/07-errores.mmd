@@ -1,0 +1,14 @@
+classDiagram
+  direction LR
+  Error <|-- ReglaNegocioError
+  Error <|-- PersistenciaError
+  PersistenciaError <|-- CodigoRetiroDuplicadoError
+  ReglaNegocioError <|-- CantidadInvalidaError
+  ReglaNegocioError <|-- ProductoNoDisponibleError
+  ReglaNegocioError <|-- PedidoVacioError
+  ReglaNegocioError <|-- TransicionEstadoInvalidaError
+  ReglaNegocioError <|-- CodigoRetiroIncorrectoError
+  ReglaNegocioError <|-- DatoInvalidoError
+  ReglaNegocioError <|-- EntidadDuplicadaError
+  ReglaNegocioError <|-- EntidadNoEncontradaError
+  ReglaNegocioError <|-- NoAutorizadoError
