@@ -81,7 +81,7 @@ export function normalizarCodigo(codigo: string | null | undefined): string {
  *
  * @param texto «BEBIDA», «ALIMENTO» o «POSTRE»
  * @returns la categoría
- * @throws {@link DatoInvalidoError} si el texto no es una categoría válida
+ * @throws Lanza {@link DatoInvalidoError} si el texto no es una categoría válida
  */
 export function aCategoria(texto: string | null | undefined): Categoria {
   const valor = (texto ?? "").trim().toUpperCase();
@@ -99,7 +99,7 @@ export function aCategoria(texto: string | null | undefined): Categoria {
  *
  * @param datos datos del formulario
  * @returns el producto normalizado
- * @throws {@link DatoInvalidoError} si algún dato está vacío o es inválido
+ * @throws Lanza {@link DatoInvalidoError} si algún dato está vacío o es inválido
  */
 export function crearProducto(datos: DatosProducto): Producto {
   const codigo = normalizarCodigo(datos.codigo);
@@ -128,7 +128,7 @@ export function crearProducto(datos: DatosProducto): Producto {
  * @param precioCentavos nuevo precio
  * @param extras descripción y foto nuevas (opcional)
  * @returns el producto actualizado
- * @throws {@link DatoInvalidoError} si algún dato es inválido
+ * @throws Lanza {@link DatoInvalidoError} si algún dato es inválido
  */
 export function actualizarProducto(
   producto: Producto,

@@ -18,7 +18,7 @@ const FORMATO_PRECIO = /^(\d{1,7})(?:[.,](\d{1,2}))?$/;
  *
  * @param texto por ejemplo «1.50», «1,5» o «2»
  * @returns centavos, por ejemplo 150
- * @throws {@link DatoInvalidoError} si el texto no es un importe válido
+ * @throws Lanza {@link DatoInvalidoError} si el texto no es un importe válido
  */
 export function aCentavos(texto: string): Centavos {
   const limpio = (texto ?? "").trim();

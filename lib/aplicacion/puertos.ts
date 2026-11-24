@@ -31,7 +31,7 @@ export interface ClienteRepositorio {
    *
    * @param datos datos validados
    * @param usuarioId id de la cuenta de acceso asociada
-   * @throws {@link EntidadDuplicadaError} si la cédula o el correo ya existen
+   * @throws Lanza {@link dominio/errores!EntidadDuplicadaError | EntidadDuplicadaError} si la cédula o el correo ya existen
    */
   registrar(datos: DatosCliente, usuarioId: string): Promise<Cliente>;
   buscarPorCodigo(codigo: string): Promise<Cliente | null>;
@@ -46,7 +46,7 @@ export interface ProveedorCuentas {
    * Crea la cuenta de un cliente, ya confirmada.
    *
    * @returns el id de la cuenta
-   * @throws {@link EntidadDuplicadaError} si el correo ya tiene cuenta
+   * @throws Lanza {@link dominio/errores!EntidadDuplicadaError | EntidadDuplicadaError} si el correo ya tiene cuenta
    */
   crearCuentaCliente(correo: string, contrasena: string, nombre: string): Promise<string>;
   /** Elimina una cuenta (compensación si el registro falla a medias). */
@@ -59,7 +59,7 @@ export interface PedidoRepositorio {
    * Guarda un pedido nuevo con todas sus líneas en una sola transacción (RNF-03).
    *
    * @returns el pedido con id asignado
-   * @throws {@link CodigoRetiroDuplicadoError} si el código ya existe
+   * @throws Lanza {@link dominio/errores!CodigoRetiroDuplicadoError | CodigoRetiroDuplicadoError} si el código ya existe
    */
   guardar(pedido: Pedido): Promise<Pedido>;
   /**

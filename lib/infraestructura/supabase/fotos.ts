@@ -19,7 +19,7 @@ export const MAX_BYTES = 4 * 1024 * 1024;
  *
  * @param archivo archivo recibido del formulario
  * @returns la dirección pública de la foto
- * @throws {@link DatoInvalidoError} si no es una imagen JPG, PNG o WebP de hasta 4 MB
+ * @throws Lanza {@link DatoInvalidoError} si no es una imagen JPG, PNG o WebP de hasta 4 MB
  */
 export async function subirFoto(archivo: File): Promise<string> {
   if (!TIPOS.includes(archivo.type)) {

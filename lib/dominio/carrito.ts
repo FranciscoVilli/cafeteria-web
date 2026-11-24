@@ -30,7 +30,7 @@ export const CARRITO_VACIO: Carrito = Object.freeze([]);
  * Valida una cantidad.
  *
  * @param cantidad valor a validar
- * @throws {@link CantidadInvalidaError} si no es un entero mayor que cero o excede el máximo
+ * @throws Lanza {@link CantidadInvalidaError} si no es un entero mayor que cero o excede el máximo
  */
 export function validarCantidad(cantidad: number): void {
   if (!Number.isInteger(cantidad) || cantidad <= 0) {
@@ -63,7 +63,7 @@ export function aCantidad(texto: string | number | null | undefined): number {
  * @param codigo código del producto
  * @param cantidad entero mayor que cero
  * @returns el carrito nuevo
- * @throws {@link CantidadInvalidaError} si la cantidad no es válida
+ * @throws Lanza {@link CantidadInvalidaError} si la cantidad no es válida
  */
 export function agregar(carrito: Carrito, codigo: string, cantidad: number): Carrito {
   validarCantidad(cantidad);
@@ -83,7 +83,7 @@ export function agregar(carrito: Carrito, codigo: string, cantidad: number): Car
  * @param codigo código del producto
  * @param cantidad nueva cantidad
  * @returns el carrito nuevo
- * @throws {@link CantidadInvalidaError} si la cantidad no es válida
+ * @throws Lanza {@link CantidadInvalidaError} si la cantidad no es válida
  */
 export function cambiarCantidad(carrito: Carrito, codigo: string, cantidad: number): Carrito {
   validarCantidad(cantidad);

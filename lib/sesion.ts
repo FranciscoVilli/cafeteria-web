@@ -53,7 +53,7 @@ export const obtenerSesion = cache(async (): Promise<Sesion | null> => {
  * Exige una sesión de cliente.
  *
  * @returns el cliente identificado
- * @throws {@link NoAutorizadoError} si no hay sesión de cliente
+ * @throws Lanza {@link NoAutorizadoError} si no hay sesión de cliente
  */
 export async function exigirCliente(): Promise<Cliente> {
   const sesion = await obtenerSesion();
@@ -67,7 +67,7 @@ export async function exigirCliente(): Promise<Cliente> {
  * Exige una sesión del personal de la cafetería.
  *
  * @returns la sesión
- * @throws {@link NoAutorizadoError} si no hay sesión del personal
+ * @throws Lanza {@link NoAutorizadoError} si no hay sesión del personal
  */
 export async function exigirPersonal(): Promise<Sesion> {
   const sesion = await obtenerSesion();

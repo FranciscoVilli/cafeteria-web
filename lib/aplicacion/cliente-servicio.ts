@@ -23,8 +23,8 @@ export class ClienteServicio {
    * Si el registro del cliente falla después de crear la cuenta, la cuenta se elimina para
    * no dejar datos a medias.
    *
-   * @throws {@link DatoInvalidoError} si algún dato es inválido
-   * @throws {@link EntidadDuplicadaError} si la cédula o el correo ya están registrados
+   * @throws Lanza {@link dominio/errores!DatoInvalidoError | DatoInvalidoError} si algún dato es inválido
+   * @throws Lanza {@link EntidadDuplicadaError} si la cédula o el correo ya están registrados
    */
   async registrarCliente(datos: DatosCliente, contrasena: string): Promise<Cliente> {
     const validos = validarCliente(datos);
@@ -51,7 +51,7 @@ export class ClienteServicio {
   /**
    * Busca un cliente por su código.
    *
-   * @throws {@link EntidadNoEncontradaError} si no existe
+   * @throws Lanza {@link EntidadNoEncontradaError} si no existe
    */
   async buscarPorCodigo(codigo: string): Promise<Cliente> {
     const c = normalizarCodigo(codigo);
