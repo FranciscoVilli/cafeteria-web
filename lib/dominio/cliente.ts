@@ -20,7 +20,18 @@ export interface Cliente {
 /** Datos de un cliente todavía sin código. */
 export type DatosCliente = Omit<Cliente, "codigo">;
 
-const CORREO = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+/**
+ * Formato básico de correo: `usuario@dominio.ext`, sin espacios y con una sola arroba.
+ * Se valida sin expresión regular para evitar el retroceso excesivo (ReDoS) que señaló el
+ * análisis estático (SonarQube, regla S5852).
+ */
+function esCorreo(correo: string): boolean {
+  if (/\s/.test(correo)) return false;
+  const arroba = correo.indexOf("@");
+  if (arroba < 1 || arroba !== correo.lastIndexOf("@")) return false;
+  // El dominio debe tener un punto con texto antes y después.
+  return correo.slice(arroba + 1).slice(1, -1).includes(".");
+}
 
 /**
  * Valida y normaliza los datos de un cliente nuevo (SUP-12).
@@ -35,7 +46,7 @@ export function validarCliente(datos: DatosCliente): DatosCliente {
   const cedula = digitos(datos.cedula, "La cédula debe tener 10 dígitos.");
   const celular = digitos(datos.celular, "El celular debe tener 10 dígitos.");
   const correoInstitucional = (datos.correoInstitucional ?? "").trim().toLowerCase();
-  if (!CORREO.test(correoInstitucional)) {
+  if (!esCorreo(correoInstitucional)) {
     throw new DatoInvalidoError("El correo electrónico no tiene un formato válido.");
   }
   return { nombre, apellido, cedula, celular, correoInstitucional };

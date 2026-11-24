@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon, Loader2Icon, ShoppingBagIcon } from "lucide-react";
 import { FotoProducto } from "@/components/foto-producto";
 import { cantidadDe } from "@/lib/dominio/carrito";
@@ -28,7 +28,34 @@ export function SelectorProductos({ productos, inicial }: { productos: Producto[
   const centro = (de: Categoria) => Math.floor((productos.filter((p) => p.categoria === de).length - 1) / 2);
   const [indice, setIndice] = useState(() => centro(categoria));
   const elegido = lista[Math.min(indice, lista.length - 1)];
-  const inicioToque = useRef<number | null>(null);
+  const total = lista.length;
+  const zonaFoto = useRef<HTMLDivElement>(null);
+
+  // Deslizar el dedo sobre la foto es un atajo táctil; la forma accesible de recorrer el
+  // carrusel son los botones «anterior / siguiente» (clic, toque o flechas del teclado).
+  useEffect(() => {
+    const zona = zonaFoto.current;
+    if (!zona || total === 0) return;
+    let inicio: number | null = null;
+    const alPresionar = (e: PointerEvent) => {
+      inicio = e.clientX;
+    };
+    const alSoltar = (e: PointerEvent) => {
+      if (inicio === null) return;
+      const dx = e.clientX - inicio;
+      inicio = null;
+      if (Math.abs(dx) > 40) {
+        const delta = dx < 0 ? 1 : -1;
+        setIndice((i) => (i + delta + total) % total);
+      }
+    };
+    zona.addEventListener("pointerdown", alPresionar);
+    zona.addEventListener("pointerup", alSoltar);
+    return () => {
+      zona.removeEventListener("pointerdown", alPresionar);
+      zona.removeEventListener("pointerup", alSoltar);
+    };
+  }, [total]);
 
   if (!elegido) return null;
 
@@ -37,20 +64,21 @@ export function SelectorProductos({ productos, inicial }: { productos: Producto[
     setIndice(centro(c));
   };
 
-  const mover = (delta: number) => setIndice((i) => (i + delta + lista.length) % lista.length);
+  const mover = (delta: number) => setIndice((i) => (i + delta + total) % total);
   const frase = FRASE[categoria];
+  // Con el foco en un botón del carrusel, las flechas también cambian de producto.
+  const conFlechas = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+      e.preventDefault();
+      mover(e.key === "ArrowRight" ? 1 : -1);
+    }
+  };
 
   return (
-    <div
-      className="relative mx-auto max-w-7xl px-4 pt-6 pb-10 outline-none sm:px-6"
-      tabIndex={0}
+    <section
+      className="relative mx-auto max-w-7xl px-4 pt-6 pb-10 sm:px-6"
       aria-roledescription="carrusel"
       aria-label={`${NOMBRE_CATEGORIA_PLURAL[categoria]} destacados`}
-      onKeyDown={(e) => {
-        if (e.target !== e.currentTarget) return;
-        if (e.key === "ArrowRight") mover(1);
-        if (e.key === "ArrowLeft") mover(-1);
-      }}
     >
       {/* Pestañas de categoría */}
       <div className="flex justify-center gap-2 lg:justify-start" role="tablist" aria-label="Categoría">
@@ -82,22 +110,14 @@ export function SelectorProductos({ productos, inicial }: { productos: Producto[
         </div>
 
         {/* Foto grande */}
-        <div
-          className="relative mx-auto aspect-square w-full max-w-[440px] touch-pan-y"
-          onPointerDown={(e) => (inicioToque.current = e.clientX)}
-          onPointerUp={(e) => {
-            if (inicioToque.current === null) return;
-            const dx = e.clientX - inicioToque.current;
-            if (Math.abs(dx) > 40) mover(dx < 0 ? 1 : -1);
-            inicioToque.current = null;
-          }}
-        >
+        <div ref={zonaFoto} className="relative mx-auto aspect-square w-full max-w-[440px] touch-pan-y">
           <div aria-hidden className="absolute inset-[14%] rounded-full bg-caramelo/30 blur-3xl" />
           <div key={elegido.codigo} className="absolute inset-0 animate-in fade-in zoom-in-95 duration-500">
             <FotoProducto producto={elegido} sizes="(min-width: 1024px) 440px, 85vw" calidad={85} prioridad className="foto-fundida" />
           </div>
           <button
             onClick={() => mover(-1)}
+            onKeyDown={conFlechas}
             aria-label="Producto anterior"
             className="absolute top-1/2 left-0 grid size-10 -translate-y-1/2 place-items-center rounded-full border border-white/15 bg-black/30 backdrop-blur transition hover:border-caramelo hover:text-caramelo lg:-left-4"
           >
@@ -105,6 +125,7 @@ export function SelectorProductos({ productos, inicial }: { productos: Producto[
           </button>
           <button
             onClick={() => mover(1)}
+            onKeyDown={conFlechas}
             aria-label="Producto siguiente"
             className="absolute top-1/2 right-0 grid size-10 -translate-y-1/2 place-items-center rounded-full border border-white/15 bg-black/30 backdrop-blur transition hover:border-caramelo hover:text-caramelo lg:-right-4"
           >
@@ -117,7 +138,7 @@ export function SelectorProductos({ productos, inicial }: { productos: Producto[
       </div>
 
       <Arco lista={lista} indice={indice} onElegir={setIndice} />
-    </div>
+    </section>
   );
 }
 

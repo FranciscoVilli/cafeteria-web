@@ -52,6 +52,9 @@ export function VistaCarrito({ esCliente, haySesion }: { esCliente: boolean; hay
       }
       setResumen(r.datos);
       setCantidades(Object.fromEntries(r.datos.lineas.map((l) => [l.producto.codigo, String(l.cantidad)])));
+    }).catch(() => {
+      // Falla de red o del servidor: se avisa en lugar de dejar la promesa sin gestionar.
+      if (vigente) toast.error("No se pudo actualizar el carrito. Revise su conexión y recargue la página.");
     });
     return () => {
       vigente = false;
