@@ -18,16 +18,17 @@ Sistema web para **pedir en la cafetería de la universidad sin hacer fila**.
 
 | Perfil | Qué puede hacer | Historias |
 |---|---|---|
-| Cliente | Crear cuenta e ingresar con correo y contraseña | HU-01 |
-| Cliente | Ver el menú por categoría (Bebidas, Alimentos, Postres) con fotos, en un selector destacado y en catálogo | HU-02 |
-| Cliente | Agregar productos al pedido, cambiar cantidades (1–50) y quitarlos; ver el total | HU-03, HU-04 |
-| Cliente | Confirmar el pedido y recibir su código de retiro | HU-05 |
-| Cliente | Consultar el estado de sus pedidos (o buscarlos por código) | HU-06 |
-| Personal | Ver la bandeja de pedidos con contadores por estado | HU-07 |
-| Personal | Avanzar el estado de un pedido | HU-08 |
-| Personal | Entregar un pedido verificando el código de retiro | HU-09 |
-| Personal | Registrar y editar productos (precio, categoría, descripción, foto) | HU-10 |
-| Personal | Marcar productos como disponibles / no disponibles | HU-11 |
+| Cliente | Ver el menú por categoría (Bebidas, Alimentos, Postres) con fotos, en un selector destacado y en catálogo | HU-01 |
+| Cliente | Agregar productos al pedido, cambiar cantidades (1–50) y quitarlos | HU-02 |
+| Cliente | Ver el importe total antes de confirmar | HU-03 |
+| Cliente | Confirmar el pedido y recibir su código de retiro | HU-04 |
+| Cliente | Consultar el estado de sus pedidos (o buscarlos por código) | HU-05 |
+| Personal | Registrar productos (precio, categoría, descripción, foto) | HU-06 |
+| Personal | Editar productos y marcarlos como disponibles / no disponibles | HU-07 |
+| Personal | Ver la bandeja de pedidos filtrada por estado, con contadores | HU-08 |
+| Personal | Avanzar el estado de un pedido | HU-09 |
+| Personal | Entregar un pedido verificando el código de retiro | HU-10 |
+| Cliente | Crear cuenta e ingresar con correo y contraseña | HU-11 |
 
 Reglas importantes: los importes se guardan en **centavos enteros** (sin errores de redondeo), confirmar
 un pedido es **una sola transacción** (se guarda completo o no se guarda), los estados solo avanzan
@@ -47,7 +48,38 @@ en orden y un pedido solo se entrega con el código correcto.
 
 ---
 
-## 🚀 Levantar el proyecto en tu computadora
+## 🐳 Ejecutar con Docker (solo el Dockerfile)
+
+La forma más rápida de probar el sistema: **solo necesita Docker Desktop**, sin Node, sin
+Supabase y sin claves. La imagen trae todo dentro (PostgreSQL, inicio de sesión, API, fotos y la
+aplicación) y en el primer arranque crea las tablas, el menú de ejemplo y las cuentas demo.
+
+```bash
+git clone https://github.com/FranciscoVilli/cafeteria-web.git
+cd cafeteria-web
+docker build -t cafeteria-web .
+docker run --name cafeteria -p 3000:3000 cafeteria-web
+```
+
+Cuando la consola muestre **«Cafetería Universitaria lista»** (≈ 30 s), abra
+**http://localhost:3000** e ingrese con `cliente@cafeteria.local / ClienteDemo2026` o
+`cajero@cafeteria.local / MostradorSeguro2026`.
+
+| Acción | Comando |
+|---|---|
+| Detener | `docker stop cafeteria` (o Ctrl + C) |
+| Volver a iniciar (conserva pedidos y fotos) | `docker start -a cafeteria` |
+| Empezar de cero (borra los datos del contenedor) | `docker rm -f -v cafeteria` |
+| Si el puerto 3000 está ocupado | `docker run --name cafeteria -p 8080:3000 cafeteria-web` → http://localhost:8080 |
+
+La primera construcción descarga ≈ 1,5 GB de imágenes base y tarda unos minutos. Las claves
+internas son las de demostración de Supabase: la imagen es para evaluar el sistema en una
+computadora, no para publicarla en internet. Los archivos están en [`Dockerfile`](Dockerfile) y
+[`docker/`](docker).
+
+---
+
+## 🚀 Levantar el proyecto en tu computadora (desarrollo)
 
 ### 1. Requisitos (una sola vez)
 
@@ -172,7 +204,8 @@ Recorre el flujo del cliente y del personal (23 verificaciones) y guarda captura
 5. Con la CI en verde y la revisión de un compañero, se hace *merge* y se borra la rama.
 
 La rama **`documentacion`** contiene los entregables escritos (requisitos, diseño, manuales,
-casos de prueba, análisis estático).
+casos de prueba, análisis estático) y también se integra a `main` mediante Pull Request. El
+detalle del método de ramificación está en [`docs/GITHUB_FLOW.md`](docs/GITHUB_FLOW.md).
 
 ## Estructura del proyecto
 

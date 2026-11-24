@@ -1,0 +1,14 @@
+node_modules
+.next
+coverage
+.git
+.github
+.env*
+!.env.example
+*.tsbuildinfo
+next-env.d.ts
+supabase/.temp
+supabase/.branches
+e2e/capturas
+Dockerfile
+.dockerignore
