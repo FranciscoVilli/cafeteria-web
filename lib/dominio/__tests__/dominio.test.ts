@@ -169,6 +169,20 @@ describe("Producto y Cliente", () => {
     expect(() => validarCliente({ ...ANA, cedula: "17123456AB" })).toThrow("La cédula debe tener 10 dígitos.");
   });
 
+  it("valida el formato del correo sin expresión regular vulnerable (SonarQube S5852)", () => {
+    const formato = "El correo electrónico no tiene un formato válido.";
+    for (const valido of ["a@epn.edu.ec", "ana.perez@epn.edu.ec", "x@b.c"]) {
+      expect(validarCliente({ ...ANA, correoInstitucional: valido }).correoInstitucional).toBe(valido);
+    }
+    for (const invalido of ["", "sin-arroba.ec", "@epn.edu.ec", "a@@epn.ec", "a@b@c.ec", "a@epn", "a@.ec", "a@epn.", "a b@epn.ec"]) {
+      expect(() => validarCliente({ ...ANA, correoInstitucional: invalido })).toThrow(formato);
+    }
+    // Entrada diseñada para provocar retroceso: debe resolverse al instante.
+    const inicio = performance.now();
+    expect(() => validarCliente({ ...ANA, correoInstitucional: "a@" + "b.".repeat(50_000) + "@" })).toThrow(formato);
+    expect(performance.now() - inicio).toBeLessThan(100);
+  });
+
   it("los errores de negocio conservan su tipo y nombre", () => {
     const e = new CantidadInvalidaError("x");
     expect(e).toBeInstanceOf(ReglaNegocioError);

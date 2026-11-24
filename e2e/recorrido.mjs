@@ -11,11 +11,18 @@
  *   E2E_PERSONAL_CORREO=... E2E_PERSONAL_CLAVE=... node e2e/recorrido.mjs [url] [carpeta-capturas]
  */
 import { mkdirSync } from "node:fs";
-import { join } from "node:path";
+import { join, resolve, sep } from "node:path";
 import { chromium } from "playwright-core";
 
 const BASE = process.argv[2] ?? "http://localhost:3000";
-const CAPTURAS = process.argv[3] ?? "e2e/capturas";
+// La carpeta de capturas se limita a e2e/ para que un argumento como «../../» no permita
+// escribir fuera del proyecto (recorrido de rutas, señalado por SonarQube).
+const RAIZ_E2E = resolve("e2e");
+const CAPTURAS = resolve(RAIZ_E2E, process.argv[3] ?? "capturas");
+if (CAPTURAS !== RAIZ_E2E && !CAPTURAS.startsWith(RAIZ_E2E + sep)) {
+  console.error("✖ La carpeta de capturas debe estar dentro de e2e/.");
+  process.exit(1);
+}
 const CHROME = process.env.CHROME_PATH ?? "C:/Program Files/Google/Chrome/Application/chrome.exe";
 const PERSONAL = { correo: process.env.E2E_PERSONAL_CORREO, clave: process.env.E2E_PERSONAL_CLAVE };
 mkdirSync(CAPTURAS, { recursive: true });
