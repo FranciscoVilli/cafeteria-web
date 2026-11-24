@@ -24,8 +24,11 @@ lo que un flujo con menos ramas reduce errores de integración y es más fácil 
    | Prefijo | Uso | Ejemplo |
    |---|---|---|
    | `feature/` | Nueva funcionalidad o infraestructura | `feature/docker` |
-   | `fix/` | Corrección de un defecto | `fix/total-carrito` |
-   | `documentacion` | Entregables escritos del curso | `documentacion` |
+   | `fix/` | Corrección de un defecto | `fix/analisis-estatico` |
+
+   Excepción: **`documentacion`** es una rama permanente que guarda solo los entregables
+   escritos (PDF y Excel). **Nunca se integra a `main`**: como no contiene el código, un *merge*
+   borraría el sistema de `main` (ver «Lección aprendida»).
 
 3. Commits pequeños, con mensaje en español que diga *qué* cambió (por ejemplo,
    «CI: lint, tipos, pruebas con cobertura y build en GitHub Actions»).
@@ -58,28 +61,37 @@ gitGraph
   branch documentacion
   checkout documentacion
   commit id: "Requisitos, diseño y diagramas"
-  commit id: "Estructura de directorios"
-  commit id: "Documentos subidos"
-  checkout main
-  merge documentacion id: "PR #1 Documentación"
-  checkout documentacion
   commit id: "Casos de prueba"
   commit id: "Análisis estático"
+  commit id: "Manuales"
   checkout main
   branch feature/docker
   checkout feature/docker
-  commit id: "CI en GitHub Actions"
   commit id: "Dockerfile todo en uno"
+  commit id: "Limpieza del repositorio"
   checkout main
-  merge feature/docker id: "PR feature/docker"
-  merge documentacion id: "PR #2 Documentación"
+  merge feature/docker id: "PR #3"
+  branch fix/analisis-estatico
+  checkout fix/analisis-estatico
+  commit id: "Correcciones de SonarQube"
+  checkout main
+  merge fix/analisis-estatico id: "PR #4"
 ```
 
 | Rama | Contenido | Integración |
 |---|---|---|
 | `main` | Código estable del sistema (Next.js + Supabase) | — |
-| `documentacion` | Requisitos, diseño, diagramas, casos de prueba, análisis estático, manuales | Pull Requests #1 y #2 |
-| `feature/docker` | Integración continua (GitHub Actions), Dockerfile, README | Pull Request a `main` |
+| `documentacion` | Requisitos, diseño, diagramas, ambiente, documentación técnica, casos de prueba, análisis estático y manuales | Permanente; no se integra |
+| `feature/docker` | Dockerfile todo en uno, README, este documento | Pull Request #3 a `main` |
+| `fix/analisis-estatico` | Corrección de los hallazgos del análisis estático | Pull Request #4 a `main` |
+
+## Lección aprendida
+
+El 21-11-2026 se integró la rama `documentacion` a `main` (PR #1). Como esa rama solo tenía los
+documentos, el *merge* eliminó todo el código de `main`. Se restauró `main` a su último commit
+estable (`e39b16b`) y se acordó la regla de arriba: `documentacion` no se integra y los Pull
+Requests hacia `main` se revisan mirando la pestaña *Files changed* antes de aprobarlos (un PR
+que borra miles de líneas es una alerta).
 
 ## Protección de `main` (recomendado)
 

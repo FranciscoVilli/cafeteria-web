@@ -221,7 +221,13 @@ supabase/             Migraciones SQL, seed (menú de ejemplo), config del entor
 scripts/              Configuración local y creación de cuentas del personal
 e2e/                  Recorrido automatizado en navegador
 public/productos/     Fotos del menú de ejemplo (licencias CC, ver CREDITOS.md)
+docker/               Arranque de la imagen todo en uno (ver Dockerfile)
+docs/                 Método de ramificación (GitHub Flow)
 ```
+
+Los documentos del curso (requisitos, diseño, casos de prueba, análisis estático, manuales y
+documentación técnica) están en la rama
+[`documentacion`](https://github.com/FranciscoVilli/cafeteria-web/tree/documentacion).
 
 La arquitectura es **por capas**: el dominio no conoce Next.js ni Supabase, por eso se prueba sin
 base de datos. Las pruebas están organizadas por historia de usuario en
