@@ -46,7 +46,7 @@ export interface Pedido {
  * @param producto producto del menú
  * @param cantidad entero mayor que cero
  * @returns la línea
- * @throws {@link CantidadInvalidaError} si la cantidad no es positiva
+ * @throws Lanza {@link CantidadInvalidaError} si la cantidad no es positiva
  */
 export function detalleConPrecioVigente(producto: Producto, cantidad: number): DetallePedido {
   if (!Number.isInteger(cantidad) || cantidad <= 0) {
@@ -92,7 +92,7 @@ export function calcularTotal(pedido: Pick<Pedido, "detalles">): Centavos {
  * @param codigoRetiro código único ya verificado (RN-NEG-05)
  * @param fecha fecha y hora de registro
  * @returns el pedido, todavía sin id
- * @throws {@link PedidoVacioError} si no hay líneas
+ * @throws Lanza {@link PedidoVacioError} si no hay líneas
  */
 export function confirmar(
   cliente: Cliente,
@@ -115,7 +115,7 @@ export function confirmar(
  *
  * @param pedido pedido actual
  * @returns el pedido con el nuevo estado
- * @throws {@link TransicionEstadoInvalidaError} si está Listo para retirar o Entregado
+ * @throws Lanza {@link TransicionEstadoInvalidaError} si está Listo para retirar o Entregado
  */
 export function avanzar(pedido: Pedido): Pedido {
   return { ...pedido, estado: siguienteEstado(pedido.estado) };
@@ -128,8 +128,8 @@ export function avanzar(pedido: Pedido): Pedido {
  * @param pedido pedido actual
  * @param codigoPresentado código que muestra el cliente
  * @returns el pedido entregado
- * @throws {@link TransicionEstadoInvalidaError} si no está Listo para retirar
- * @throws {@link CodigoRetiroIncorrectoError} si el código no coincide
+ * @throws Lanza {@link TransicionEstadoInvalidaError} si no está Listo para retirar
+ * @throws Lanza {@link CodigoRetiroIncorrectoError} si el código no coincide
  */
 export function entregar(pedido: Pedido, codigoPresentado: string | null | undefined): Pedido {
   if (pedido.estado !== "LISTO_PARA_RETIRAR") {

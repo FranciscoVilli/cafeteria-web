@@ -48,7 +48,7 @@ export function mensajeTransicion(actual: EstadoPedido, destino: EstadoPedido): 
  *
  * @param estado estado actual
  * @returns EN_PREPARACION desde PENDIENTE y LISTO_PARA_RETIRAR desde EN_PREPARACION
- * @throws {@link TransicionEstadoInvalidaError} desde LISTO_PARA_RETIRAR o ENTREGADO
+ * @throws Lanza {@link TransicionEstadoInvalidaError} desde LISTO_PARA_RETIRAR o ENTREGADO
  */
 export function siguienteEstado(estado: EstadoPedido): EstadoPedido {
   switch (estado) {

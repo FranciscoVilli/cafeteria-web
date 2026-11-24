@@ -14,6 +14,8 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Reportes generados por las pruebas.
     "coverage/**",
+    // Documentación técnica generada por TypeDoc (npm run docs).
+    "docs-tecnica/**",
   ]),
 ]);
 

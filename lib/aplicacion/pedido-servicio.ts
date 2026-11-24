@@ -82,9 +82,9 @@ export class PedidoServicio {
    * Agrega un producto disponible al carrito; si ya estaba, suma la cantidad (HU-02). No
    * escribe en la base de datos.
    *
-   * @throws {@link CantidadInvalidaError} si la cantidad no es válida
-   * @throws {@link EntidadNoEncontradaError} si el producto no existe
-   * @throws {@link ProductoNoDisponibleError} si el producto no está disponible
+   * @throws Lanza {@link dominio/errores!CantidadInvalidaError | CantidadInvalidaError} si la cantidad no es válida
+   * @throws Lanza {@link dominio/errores!EntidadNoEncontradaError | EntidadNoEncontradaError} si el producto no existe
+   * @throws Lanza {@link dominio/errores!ProductoNoDisponibleError | ProductoNoDisponibleError} si el producto no está disponible
    */
   async agregarAlCarrito(carrito: Carrito, codigoProducto: string, cantidad: number): Promise<Carrito> {
     carritos.validarCantidad(cantidad);
@@ -95,8 +95,8 @@ export class PedidoServicio {
   /**
    * Reemplaza la cantidad de una línea (HU-03, escenario 2).
    *
-   * @throws {@link CantidadInvalidaError} si la cantidad no es válida
-   * @throws {@link ProductoNoDisponibleError} si el producto ya no está disponible
+   * @throws Lanza {@link dominio/errores!CantidadInvalidaError | CantidadInvalidaError} si la cantidad no es válida
+   * @throws Lanza {@link dominio/errores!ProductoNoDisponibleError | ProductoNoDisponibleError} si el producto ya no está disponible
    */
   async cambiarCantidad(carrito: Carrito, codigoProducto: string, cantidad: number): Promise<Carrito> {
     carritos.validarCantidad(cantidad);
@@ -113,7 +113,7 @@ export class PedidoServicio {
    * Calcula el total del carrito con los precios vigentes (HU-03, RN-NEG-03).
    *
    * @returns total en centavos; 0 si está vacío
-   * @throws {@link EntidadNoEncontradaError} si algún producto ya no existe
+   * @throws Lanza {@link dominio/errores!EntidadNoEncontradaError | EntidadNoEncontradaError} si algún producto ya no existe
    */
   async calcularTotal(carrito: Carrito): Promise<Centavos> {
     const porCodigo = await this.productosDe(carrito);
@@ -158,10 +158,10 @@ export class PedidoServicio {
    * {@link MAX_INTENTOS_CODIGO} intentos) y guarda cabecera y líneas en una transacción. Si
    * al guardar otro pedido simultáneo tomó el mismo código, repite con otro (diseño 8.2).
    *
-   * @throws {@link PedidoVacioError} si el carrito no tiene productos (RN-NEG-01)
-   * @throws {@link ProductoNoDisponibleError} si algún producto no está disponible (RN-NEG-02)
-   * @throws {@link EntidadNoEncontradaError} si el cliente o un producto no existe
-   * @throws {@link PersistenciaError} si no se pudo guardar
+   * @throws Lanza {@link dominio/errores!PedidoVacioError | PedidoVacioError} si el carrito no tiene productos (RN-NEG-01)
+   * @throws Lanza {@link dominio/errores!ProductoNoDisponibleError | ProductoNoDisponibleError} si algún producto no está disponible (RN-NEG-02)
+   * @throws Lanza {@link dominio/errores!EntidadNoEncontradaError | EntidadNoEncontradaError} si el cliente o un producto no existe
+   * @throws Lanza {@link dominio/errores!PersistenciaError | PersistenciaError} si no se pudo guardar
    */
   async confirmarPedido(carrito: Carrito, codigoCliente: string): Promise<Pedido> {
     const cliente = await this.buscarCliente(codigoCliente);
@@ -196,7 +196,7 @@ export class PedidoServicio {
   /**
    * Consulta un pedido por su código de retiro (HU-05).
    *
-   * @throws {@link EntidadNoEncontradaError} si no existe
+   * @throws Lanza {@link dominio/errores!EntidadNoEncontradaError | EntidadNoEncontradaError} si no existe
    */
   async consultarPorCodigoRetiro(codigo: string): Promise<Pedido> {
     const c = (codigo ?? "").trim().toUpperCase();
@@ -210,7 +210,7 @@ export class PedidoServicio {
   /**
    * Lista los pedidos de un cliente, del más reciente al más antiguo (HU-05, esc. 3).
    *
-   * @throws {@link EntidadNoEncontradaError} si el cliente no existe
+   * @throws Lanza {@link dominio/errores!EntidadNoEncontradaError | EntidadNoEncontradaError} si el cliente no existe
    */
   async consultarPedidosDeCliente(codigoCliente: string): Promise<Pedido[]> {
     const cliente = await this.buscarCliente(codigoCliente);
@@ -230,7 +230,7 @@ export class PedidoServicio {
   /**
    * Busca un pedido por id (pantalla P-P3).
    *
-   * @throws {@link EntidadNoEncontradaError} si no existe
+   * @throws Lanza {@link dominio/errores!EntidadNoEncontradaError | EntidadNoEncontradaError} si no existe
    */
   async buscarPedido(id: number): Promise<Pedido> {
     const pedido = Number.isInteger(id) && id > 0 ? await this.pedidos.buscarPorId(id) : null;
@@ -243,9 +243,9 @@ export class PedidoServicio {
   /**
    * Avanza el pedido al siguiente estado (HU-09).
    *
-   * @throws {@link TransicionEstadoInvalidaError} si está Listo para retirar o Entregado, o
+   * @throws Lanza {@link dominio/errores!TransicionEstadoInvalidaError | TransicionEstadoInvalidaError} si está Listo para retirar o Entregado, o
    *         si otro usuario lo cambió al mismo tiempo
-   * @throws {@link EntidadNoEncontradaError} si no existe
+   * @throws Lanza {@link dominio/errores!EntidadNoEncontradaError | EntidadNoEncontradaError} si no existe
    */
   async avanzarEstado(id: number): Promise<Pedido> {
     const actual = await this.buscarPedido(id);
@@ -255,9 +255,9 @@ export class PedidoServicio {
   /**
    * Entrega el pedido verificando primero el estado y luego el código (HU-10, RN-NEG-07).
    *
-   * @throws {@link TransicionEstadoInvalidaError} si no está Listo para retirar
-   * @throws {@link CodigoRetiroIncorrectoError} si el código no coincide
-   * @throws {@link EntidadNoEncontradaError} si no existe
+   * @throws Lanza {@link dominio/errores!TransicionEstadoInvalidaError | TransicionEstadoInvalidaError} si no está Listo para retirar
+   * @throws Lanza {@link dominio/errores!CodigoRetiroIncorrectoError | CodigoRetiroIncorrectoError} si el código no coincide
+   * @throws Lanza {@link dominio/errores!EntidadNoEncontradaError | EntidadNoEncontradaError} si no existe
    */
   async entregarPedido(id: number, codigoPresentado: string): Promise<Pedido> {
     const actual = await this.buscarPedido(id);

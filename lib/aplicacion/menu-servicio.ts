@@ -37,8 +37,8 @@ export class MenuServicio {
   /**
    * Registra un producto nuevo (HU-06).
    *
-   * @throws {@link DatoInvalidoError} si algún dato es inválido
-   * @throws {@link EntidadDuplicadaError} si ya existe un producto con ese código
+   * @throws Lanza {@link dominio/errores!DatoInvalidoError | DatoInvalidoError} si algún dato es inválido
+   * @throws Lanza {@link EntidadDuplicadaError} si ya existe un producto con ese código
    */
   async registrarProducto(datos: DatosProducto): Promise<Producto> {
     const nuevo = crearProducto(datos);
@@ -53,8 +53,8 @@ export class MenuServicio {
    * Cambia nombre, categoría, precio y, si se indican, descripción y foto (HU-07). Los
    * pedidos confirmados conservan su precio.
    *
-   * @throws {@link EntidadNoEncontradaError} si el producto no existe
-   * @throws {@link DatoInvalidoError} si algún dato es inválido
+   * @throws Lanza {@link EntidadNoEncontradaError} si el producto no existe
+   * @throws Lanza {@link dominio/errores!DatoInvalidoError | DatoInvalidoError} si algún dato es inválido
    */
   async actualizarProducto(
     codigo: string,
@@ -71,7 +71,7 @@ export class MenuServicio {
   /**
    * Habilita o deshabilita un producto (HU-07).
    *
-   * @throws {@link EntidadNoEncontradaError} si el producto no existe
+   * @throws Lanza {@link EntidadNoEncontradaError} si el producto no existe
    */
   async cambiarDisponibilidad(codigo: string, disponible: boolean): Promise<Producto> {
     const actualizado = cambiarDisponibilidad(await this.buscar(codigo), disponible);

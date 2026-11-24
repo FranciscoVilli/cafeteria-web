@@ -38,7 +38,7 @@ function esCorreo(correo: string): boolean {
  *
  * @param datos datos del formulario
  * @returns los datos normalizados
- * @throws {@link DatoInvalidoError} con el mensaje del primer campo inválido
+ * @throws Lanza {@link DatoInvalidoError} con el mensaje del primer campo inválido
  */
 export function validarCliente(datos: DatosCliente): DatosCliente {
   const nombre = obligatorio(datos.nombre, "El nombre es obligatorio.");
@@ -56,7 +56,7 @@ export function validarCliente(datos: DatosCliente): DatosCliente {
  * Valida la contraseña de la cuenta del cliente (SUP-15).
  *
  * @param contrasena contraseña escrita
- * @throws {@link DatoInvalidoError} si tiene menos de 8 caracteres
+ * @throws Lanza {@link DatoInvalidoError} si tiene menos de 8 caracteres
  */
 export function validarContrasena(contrasena: string): void {
   if ((contrasena ?? "").length < 8) {

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "Cafetería Universitaria · Documentación técnica",
+  "entryPoints": ["lib"],
+  "entryPointStrategy": "expand",
+  "exclude": ["**/__tests__/**", "lib/utils.ts"],
+  "readme": "docs/DOCUMENTACION_TECNICA.md",
+  "out": "docs-tecnica",
+  "tsconfig": "tsconfig.json",
+  "excludePrivate": true,
+  "excludeInternal": true,
+  "sort": ["kind", "instance-first", "alphabetical-ignoring-documents"],
+  "navigation": { "includeGroups": true },
+  "validation": { "notExported": false, "invalidLink": true, "notDocumented": false },
+  "hideGenerator": true,
+  "titleLink": "https://github.com/FranciscoVilli/cafeteria-web"
+}
