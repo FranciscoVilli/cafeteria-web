@@ -9,6 +9,8 @@ const supabase = new URL(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "http://127.0.0
 const esLocal = ["127.0.0.1", "localhost"].includes(supabase.hostname);
 
 const nextConfig: NextConfig = {
+  // En la imagen Docker se compila en modo autónomo (servidor Node mínimo, ver Dockerfile).
+  ...(process.env.NEXT_OUTPUT === "standalone" ? { output: "standalone" as const } : {}),
   // Fotos de productos de hasta 4 MB (Vercel acepta como máximo 4,5 MB por petición).
   experimental: { serverActions: { bodySizeLimit: "4.5mb" } },
   images: {

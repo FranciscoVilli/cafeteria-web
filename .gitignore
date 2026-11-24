@@ -45,3 +45,8 @@ next-env.d.ts
 supabase/.temp
 supabase/.branches
 e2e/capturas
+
+# Notas locales del asistente de desarrollo (no se publican)
+CLAUDE.md
+AGENTS.md
+.claude/
